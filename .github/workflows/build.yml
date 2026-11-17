@@ -1,0 +1,29 @@
+name: Build and test
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: chmod +x gradlew
+      - run: ./gradlew build -x test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sudoku-dist
+          path: app/build/distributions/app.zip
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: chmod +x gradlew
+      - run: ./gradlew test
